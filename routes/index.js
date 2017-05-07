@@ -200,89 +200,6 @@ module.exports = function(app){
 
   });
 
-  app.get('/get_temp', function(req, res, next){
-
-    console.log('Iniciando captura de dados no Facebook')
-
-    db.query('select * from tbEmpregados', function (error, rows, fields) {
-      if (error) throw error;
-
-      var timeout = 0;
-
-      // Percorre os resultados e submete o request
-      rows.forEach(function(row){
-
-        // Submete request para a DataHolics para recuperar os dados do Facebook
-        var curEmail = row.EMAIL1;
-
-        getInfoDataHolics(curEmail, function(response){
-
-          var likes = response.profile.socialProfiles[0].likes;
-
-          likes.forEach(function(like){
-
-            // console.log(row.CPF);
-            // console.log(like);
-            // console.log('=======================')
-
-            var cpf = row.CPF;
-            var link = like.link;
-            var categoria = like.category;
-            var nome = like.name;
-
-            var promise = new Promise(function(resolve, reject){
-
-              db.query("INSERT INTO tbGostos SET CPF = " + db.escape(cpf) + ", Link = " + db.escape(link), function (error, results, fields) {
-                if (error) throw error;
-                console.log('Registros de Like Inserido');
-                resolve();
-              });
-
-            })
-
-            /*
-            promise.then(function(){
-
-              // Insere o registro na tabela de Links
-              // db.query("SELECT * FROM tbLink WHERE Link = "+ db.escape(link) + " AND Categoria = " + db.escape(categoria), function(error, results, fields){
-              //   if (error) throw error;
-              //
-              //   if(results.length === 0){
-                //
-                //   // var sql = "INSERT INTO tbLink SET Link = '" + db.escape(link) + "', Categoria = '" + db.escape(categoria) + "', Nome = '" + db.escape(nome) + "'";
-                  var sql = "INSERT INTO tbLink SET Link = " + db.escape(link) + ", Categoria = " + db.escape(categoria) + ", Nome = " + db.escape(nome);
-                  // console.log(sql)
-
-                  db.query(sql, function (error, results, fields) {
-                    // if (error) {
-                    //   console.log(link);
-                    //   console.log(categoria);
-                    //   console.log(nome)
-                    //   process.exit();
-                    // };
-                    console.log('Registro de Link Inserido')
-
-                  });
-
-              //   }
-              //
-              //
-              // });
-
-            })
-            */
-
-
-          });
-
-        });
-
-      });
-
-    });
-
-  });
-
   app.get('/get_companies', function(req, res, next){
 
     var sql = 'select CNAEEMPRESASOCIO from tbEmpregados where CNAEEMPRESASOCIO is not null GROUP BY CNAEEMPRESASOCIO';
@@ -300,16 +217,18 @@ module.exports = function(app){
     var sql = "select CBODESCRICAO1 from tbEmpregados where CNAEEMPRESASOCIO = '"+ empresa + "'";
 
     db.query(sql, function(err, results, fields){
+      console.log(results);
       res.send(results);
     });
 
   });
 
-  app.get('/get_pages/', function(req, res, next){
+  app.get('/get_pages', function(req, res, next){
 
     var sql = "SELECT e.sexo, count(g.cpf) as qtde, g.link, l.nome FROM tbGostos AS g INNER JOIN tbEmpregados AS e ON e.cpf = g.cpf INNER JOIN tbLink AS l ON g.link = l.link GROUP BY g.link, e.sexo ORDER BY count(g.cpf) LIMIT 200";
 
     db.query(sql, function(err, results, fields){
+      console.log(results);
       res.send(results);
     });
 
