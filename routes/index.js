@@ -6,7 +6,7 @@ module.exports = function(app){
   var request = require('request');
 
   // Custom Modules
-  var db = require('./../libs/connectdb.js')();
+  // var db = require('./../libs/connectdb.js')();
 
   var ACCESS_TOKEN_ASSERTIVA = '210DB58D-2492-4152-AAD9-4A9647771670';
   var ACCESS_TOKEN_DATAHOLICS = '2d8d596a0b97569f9226a8c33ed9c6dbc8d88120';
@@ -90,7 +90,7 @@ module.exports = function(app){
       if(response.body.message == 'Request sent to queue.'){
         callback(null)
       }
-    
+
       console.log(email)
       console.log('==============================================')
       console.log(response.body)
@@ -202,6 +202,9 @@ module.exports = function(app){
 
   });
 
+
+  /*
+
   app.get('/get_temp', function(req, res, next){
 
     db.query('select * from tbEmpregados', function (error, rows, fields) {
@@ -215,10 +218,9 @@ module.exports = function(app){
         // Submete request para a DataHolics para recuperar os dados do Facebook
         var curEmail = row.EMAIL1;
 
-        setTimeout(function(){
-          getInfoDataHolics(curEmail, function(results){
-            // console.log(results)
-          });
+        getInfoDataHolics(curEmail, function(results){
+          // console.log(results)
+        });
 
           // if(results.length > 3){
           //   console.log(results);
@@ -227,12 +229,12 @@ module.exports = function(app){
           // console.log(results.length)
           // console.log(results)
 
-        }, 0);
-
       });
 
     });
 
   });
+
+  */
 
 }
