@@ -14,7 +14,7 @@ module.exports = function(){
 	  user     : 'gydf6hgwmn5xptzl',
 	  password : 'l7fvehji3jqntqcj',
 		database : 'vx723fkuqlddlnp6',
-		port: '13306'
+		port: '3306'
 	});
 
 	connection.connect(function(err) {
