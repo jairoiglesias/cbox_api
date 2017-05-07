@@ -1,0 +1,15 @@
+.background-image{
+     background-image: url(/images/background-logo.png);
+     background-repeat: no-repeat;
+     -webkit-background-size: cover;
+     -moz-background-size: cover;
+     -o-background-size: cover;
+     background-size: cover;
+     opacity: 0.1;
+     position: absolute;
+     width: 100%;
+     height: 100%;
+     top: 0;
+     left: 0;
+     z-index: -1;
+}

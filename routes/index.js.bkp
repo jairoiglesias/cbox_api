@@ -1,0 +1,174 @@
+
+module.exports = function(app){
+
+  // Importa modulos
+  var rp = require('request-promise');
+  var request = require('request');
+
+  var ACCESS_TOKEN_ASSERTIVA = '210DB58D-2492-4152-AAD9-4A9647771670';
+  var ACCESS_TOKEN_DATAHOLICS = '2d8d596a0b97569f9226a8c33ed9c6dbc8d88120';
+
+  // Função para obter os dados da API da Assertiva
+
+  function getInfoAssetiva(tipoConsulta, valor, callback){
+
+    switch(tipoConsulta){
+
+      case 'cpf':
+
+        console.log('Pesquisando dados de '+valor);
+
+        var options = {
+          method: 'POST',
+          uri: 'https://services.assertivasolucoes.com.br/v1/localize/1000/consultar',
+          form: {
+            'cpf': valor
+          },
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+            'Authorization' : ACCESS_TOKEN_ASSERTIVA
+          },
+          json: true
+        }
+
+        rp(options).then(function(response){
+          callback(response);
+        });
+
+        break;
+
+      case 'cnpj':
+
+        console.log('Pesquisando dados de '+valor);
+
+        var options = {
+          method: 'POST',
+          uri: 'https://services.assertivasolucoes.com.br/v1/localize/1001/consultar',
+          form: {
+            'cnpj': valor
+          },
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+            'Authorization' : ACCESS_TOKEN_ASSERTIVA
+          },
+          json: true
+        }
+
+        rp(options).then(function(response){
+          callback(response);
+        });
+
+        break;
+
+      default:
+        callback('Tipo de Operação Invalida');
+    }
+
+  }
+
+
+
+  function getInfoDataHolics(email){
+
+  }
+
+  app.get('/', function(req, res){
+    res.render('index');
+  });
+
+  // Rota para dados da Assertiva
+
+  app.get('/assertiva/:tipoconsulta/:valor', function(req, res, next){
+
+    var tipoConsulta = req.params.tipoconsulta;
+    var valor = req.params.valor;
+
+    switch(tipoConsulta){
+
+      case 'cpf':
+
+        console.log('Pesquisando dados de '+valor);
+
+        var options = {
+          method: 'POST',
+          uri: 'https://services.assertivasolucoes.com.br/v1/localize/1000/consultar',
+          form: {
+            'cpf': valor
+          },
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+            'Authorization' : ACCESS_TOKEN_ASSERTIVA
+          },
+          json: true
+        }
+
+        rp(options).then(function(response){
+
+          res.send(response)
+
+        });
+
+        break;
+
+      case 'cnpj':
+
+        console.log('Pesquisando dados de '+valor);
+
+        var options = {
+          method: 'POST',
+          uri: 'https://services.assertivasolucoes.com.br/v1/localize/1001/consultar',
+          form: {
+            'cnpj': valor
+          },
+          headers: {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+            'Authorization' : ACCESS_TOKEN_ASSERTIVA
+          },
+          json: true
+        }
+
+        rp(options).then(function(response){
+
+          res.send(response)
+
+        });
+
+        break;
+
+      default:
+        res.send('Tipo de consulta inválida');
+
+    }
+
+  });
+
+  // Rota para dados do Facebook
+  app.get('/fb/:email', function(req, res, next){
+
+    var email = req.params.email;
+
+    var options = {
+      method: 'GET',
+      uri: 'http://api.dataholics.io/profile',
+      qs: {
+        email : email,
+        accessKey : ACCESS_TOKEN_DATAHOLICS
+      },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/27.0.1453.110 Safari/537.36',
+      },
+      json: true
+    }
+
+    rp(options).then(function(response){
+
+      res.send(response)
+
+    });
+
+  });
+
+
+
+
+}

@@ -1,0 +1,146 @@
+extends .\partials\layout
+
+block content
+  h2 Grace Maker
+  input(type="button" id="btn_enviar" value="Enviar")
+  // Log do processo de analise de vox
+  //- h4 Log do processamento do SpeechRecognition
+  
+  pre(id='log')
+  div(id="clear")
+  
+  //- Container ira receber o processamento HTML resultante da analise de audio
+  //- h4 Container da construção do site
+  div(id='container')
+  
+  style(type="text/css").
+    #log{
+      border:1px solid lightseagreen;
+      padding:5px;
+      height: 80px;
+      width: 60%;
+      border-radius:3px;
+      overflow:scroll;
+      float:left;
+      margin-left:15px;
+    }
+    
+    #container{
+      border:1px solid gainsboro;
+      padding:5px;
+      height: 800px;
+      border-radius:3px;
+      width: 100%;
+      //- float:right;
+      margin-top:10px;
+      overflow:auto;
+    
+    }
+    
+    #clear{
+      clear:both;
+    }
+    
+    #btn_enviar{
+      float:left;
+      width:100px;
+      margin-top:10px;
+    }
+    
+    h2{
+      font-family:
+    }
+    
+  script(type="text/javascript" src="javascripts/SpeechConstructEngine.js")
+  
+  script(type="text/javascript").
+  
+    // Auto-Scroll do Log
+    setTimeout(function(){
+      var pre = jQuery("#log");
+      pre.scrollTop( pre.prop("scrollHeight") );
+    }, 1000);
+  
+    // Função para imprimir texto na div Log
+    function log(text){
+      $('#log').append('\n' + text);
+      
+      var div = document.getElementById('log');
+      div.scrollTop = div.scrollHeight - div.clientHeight;
+    }
+    
+    // Função para iniciar a API do SpeechRecognition
+    function startRecognizer(callback){
+      
+      // Efetua validação se Navegador possui suporte a tecnologia SpeechRecognition
+      window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+      
+      if (window.SpeechRecognition === null) {
+        log('Seu navegador não suporta SpeechRecognition');
+        return false;
+      }
+      
+      log('Suporte da API SpeechRecognition valido para este navegador');
+      
+      // Cria novos objetos SpeechRecognition e speechConstructEngine
+      var recognizer = new window.SpeechRecognition();
+      var engine = new speechConstructEngine();
+      
+      // Invoca callback devolvendo o objeto SpeechRecognition e speechConstructEngine
+      callback(recognizer, engine);
+    }
+  
+    $(document).ready(function(){
+      
+      $('#btn_enviar').click(function(e){
+        
+        e.preventDefault();
+        
+        startRecognizer(function(recognizer, engine){
+          log('Speech API start success !!!!');
+          
+          // Define propriedades
+          recognizer.continuous = true;           // Força gravação contínua
+          recognizer.interimResults = true;       // Altera o resultado ao inicializar nova gravação
+          recognizer.lang = "pt-BR";              // Define idioma
+          
+          // Inicia a gravação
+          recognizer.start();
+          
+          // Define Callbacks
+          recognizer.onstart = function(){
+            log('Gravação iniciada com sucesso ...');
+            
+            $('#btn_enviar').attr('value', 'Gravando ...');
+            
+          }
+          
+          recognizer.onend = function(){
+            log('Finalizando gravação ...');
+          }
+          
+          recognizer.onresult = function(event){
+            
+            var audioTranscritEvent = event
+            
+            if(event.results.length > 0){
+              
+              // Envia para a Engine construtora analisar o texto
+              engine.parseText(audioTranscritEvent, function(response){
+                
+                log('Callback Engine Parse Text Function:' + response)
+                
+                // Acrescenta o conteudo a pagina
+                $('#container').append(response);
+                
+                });
+            }
+            
+            
+          }
+          
+        });
+        
+      });
+      
+    });
