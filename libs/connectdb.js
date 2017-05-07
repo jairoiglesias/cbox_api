@@ -7,23 +7,24 @@
 
 module.exports = function(){
 
-	// var mysql      = require('mysql');
-	// var connection = mysql.createConnection({
-	//   host     : 'localhost',
-	//   user     : 'root',
-	//   password : '',
-	// 	database : 'cbox'
-	// });
-	//
-	// connection.connect(function(err) {
-	// 	if (err) {
-	// 		console.error('error connecting: ' + err.stack);
-	// 		return;
-	// 	}
-	//
-	// 	console.log('Conexão realizada com sucesso!');
-	//
-	// });
-	//
-	// return connection
+	var mysql      = require('mysql');
+	var connection = mysql.createConnection({
+	  host     : 'er7lx9km02rjyf3n.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
+	  user     : 'gydf6hgwmn5xptzl',
+	  password : 'l7fvehji3jqntqcj',
+		database : 'vx723fkuqlddlnp6',
+		port: '13306'
+	});
+
+	connection.connect(function(err) {
+		if (err) {
+			console.error('error connecting: ' + err.stack);
+			return;
+		}
+
+		console.log('Conexão realizada com sucesso!');
+
+	});
+
+	return connection
 }
