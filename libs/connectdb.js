@@ -9,8 +9,7 @@ module.exports = function(){
 
 	var mysql      = require('mysql');
 	var connection = mysql.createConnection({
-	  // host     : 'er7lx9km02rjyf3n.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
-		host     : 'localhost',
+	  host     : 'er7lx9km02rjyf3n.cbetxkdyhwsb.us-east-1.rds.amazonaws.com',
 	  user     : 'gydf6hgwmn5xptzl',
 	  password : 'l7fvehji3jqntqcj',
 		database : 'vx723fkuqlddlnp6',
