@@ -291,18 +291,16 @@ module.exports = function(app){
       res.send(results);
     });
 
-  })
+  });
 
   app.get('/get_occupations/:empresa', function(req, res, next){
 
     var empresa = req.params.empresa;
 
-    console.log(empresa)
-
     var sql = "select CBODESCRICAO1 from tbEmpregados where CNAEEMPRESASOCIO = '"+ empresa + "'";
 
     db.query(sql, function(err, results, fields){
-      res.send(results)
+      res.send(results);
     });
 
   });
@@ -312,7 +310,7 @@ module.exports = function(app){
     var sql = "SELECT e.sexo, count(g.cpf) as qtde, g.link, l.nome FROM tbGostos AS g INNER JOIN tbEmpregados AS e ON e.cpf = g.cpf INNER JOIN tbLink AS l ON g.link = l.link GROUP BY g.link, e.sexo ORDER BY count(g.cpf) LIMIT 200";
 
     db.query(sql, function(err, results, fields){
-      res.send(results)
+      res.send(results);
     });
 
   });
