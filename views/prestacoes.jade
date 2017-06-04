@@ -3,50 +3,53 @@ extends layout
 block content
   
   script(type="text/javascript").
+  
     $(document).ready(function(){
-      
-      var promise = $.ajax({
-        url: 'json'
-      });
-      
-      promise.then(function(registros){
         
-        var contentTable
+      setInterval(function(){
         
-        var headerFill = false;
+        var promise = $.ajax({
+          url: 'json'
+        });
         
-        registros.forEach(function(registro){
+        promise.then(function(registros){
           
-          if (!headerFill) {
-            contentTable = '<tbody><thead><tr>'
+          var contentTable
+          
+          var headerFill = false;
+          
+          registros.forEach(function(registro){
             
-            for(var i = 0; i < Object.keys(registro).length; i++){
-              contentTable += '<th>'+Object.keys(registro)[i].toUpperCase()+'</th>'
+            if (!headerFill) {
+              contentTable = '<tbody><thead><tr>'
+              
+              for(var i = 0; i < Object.keys(registro).length; i++){
+                contentTable += '<th>'+Object.keys(registro)[i].toUpperCase()+'</th>'
+              }
+              
+              contentTable += '</tr></thead>'
+              
+              headerFill = true;
+            } 
+            
+            contentTable += '<tr>'
+            
+            for(var index in registro){
+              contentTable += '<td>'+registro[index]+'</td>'
             }
             
-            contentTable += '</tr></thead>'
+            contentTable += '</tbody></tr>'
             
-            headerFill = true;
-          } 
+          });
           
-          contentTable += '<tr>'
-          
-          for(var index in registro){
-            contentTable += '<td>'+registro[index]+'</td>'
-          }
-          
-          contentTable += '</tbody></tr>'
-          
+          $('#lista_prestacoes').children().remove();
+          $('#lista_prestacoes').append(contentTable);
           
         });
         
-        $('#lista_prestacoes').append(contentTable);
-      });
+      }, 1000);
       
       $('#btn_exportar_csv').click(function(){
-        
-        //- var table = $('#lista_prestacoes')
-        //- exportTableToCSV(table, 'teste.csv');
 
     		$("#lista_prestacoes").table2csv();
         
@@ -54,9 +57,9 @@ block content
       
     });
 
-  div(id='app' class="container-flui")
+  div(id='app' class="container-fluid")
     
-    div(style="border:1px solid;box-shadow:1px 1px 1px;border-radius:3px;background:rgba(74, 91, 185, 0.11);")
+    div(style="border:1px solid;box-shadow:1px 1px 1px;border-radius:3px;background:rgba(74, 91, 185, 0.11);padding:7px")
       h5 Prestações de Contas
     input(type="button" value="Exportar CSV" id="btn_exportar_csv" style="float:right;margin-top:5px" class="btn")
     table(id="lista_prestacoes" class="table-striped table-hover")
