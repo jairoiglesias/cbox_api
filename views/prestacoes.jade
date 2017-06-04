@@ -1,6 +1,14 @@
 extends layout
 
 block content
+
+  style(type="text/css").
+    .anexo{
+      border:1px solid;
+      padding:2px 12px;
+      border-radius:4px;
+      cursor:pointer;
+    }
   
   script(type="text/javascript").
   
@@ -17,11 +25,12 @@ block content
           var contentTable
           
           var headerFill = false;
+          var content = '<tbody>';
           
           registros.forEach(function(registro){
             
             if (!headerFill) {
-              contentTable = '<tbody><thead><tr>'
+              contentTable = '<thead><tr>'
               
               for(var i = 0; i < Object.keys(registro).length; i++){
                 contentTable += '<th>'+Object.keys(registro)[i].toUpperCase()+'</th>'
@@ -35,15 +44,43 @@ block content
             contentTable += '<tr>'
             
             for(var index in registro){
-              contentTable += '<td>'+registro[index]+'</td>'
+              
+              if (index == 'anexo'){
+                contentTable += '<td style="text-decorationo:none"><a class="anexo">'+registro[index]+'<a/></td>'
+              }
+              else{
+                contentTable += '<td>'+registro[index]+'</td>'
+              }
             }
             
-            contentTable += '</tbody></tr>'
+            contentTable += '</tr>'
             
           });
           
+          contentTable += '</tbody>'
+          
           $('#lista_prestacoes').children().remove();
           $('#lista_prestacoes').append(contentTable);
+          
+          $('#lista_prestacoes').find('tr').each(function(index, item){
+            
+            // Recupera o vereador que foi informado no campo
+            var vereadorInput = $('#pesquisar_vereador').val();
+            
+            if(vereadorInput.length != 0){
+              
+              // Recupera o vereador da linha atual
+              var vereadorLista = $(this).find('td').eq(5).text();
+              
+              if (vereadorLista.indexOf(vereadorInput) == -1){
+                item.style.display = 'none'
+              }
+            }
+            else{
+              item.style.display = 'table-row'
+            }
+            
+          });
           
         });
         
@@ -57,9 +94,25 @@ block content
       
     });
 
-  div(id='app' class="container-fluid")
-    
+  div(id='app')
+    nav.navbar.navbar-inverse
+      .container-fluid
+        .navbar-header
+          a.navbar-brand(href='#') 
+            span(style="padding:5px 20px;border-radius:3px;background:#424242") Presta Contas
+        ul.nav.navbar-nav
+          li.active
+            a(href='#') Home
+          li
+            a(href='#') Lista de Prestações de Contas
+          li
+            a(href='#') 
+        form.navbar-form.navbar-left
+          .form-group
+            input.form-control(type='text', placeholder='Search' id="pesquisar_vereador")
+          button.btn.btn-default(type='submit') Pesquisar
     div(style="border:1px solid;box-shadow:1px 1px 1px;border-radius:3px;background:rgba(74, 91, 185, 0.11);padding:7px")
-      h5 Prestações de Contas
-    input(type="button" value="Exportar CSV" id="btn_exportar_csv" style="float:right;margin-top:5px" class="btn")
-    table(id="lista_prestacoes" class="table-striped table-hover")
+      h4 Prestações de Contas
+
+    input(type="button" value="Exportar CSV" id="btn_exportar_csv" style="float:right;margin-top:5px;background:rgb(25, 154, 171)" class="btn btn-primary")
+    table(id="lista_prestacoes" class="table table-striped table-hover")
