@@ -13,8 +13,8 @@ var consolidate = require('consolidate');     // Permite utilizar mais de um Tem
 var app = express();
 
 // view engine setup
-// app.set('views', path.join(__dirname, 'views'));
-// app.set('view engine', 'jade');
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
 
 // Define Template Engine
 
@@ -23,7 +23,7 @@ var app = express();
 */
 
 app.engine('jade', consolidate.jade);
-app.engine('html', consolidate.ejs);
+// app.engine('html', consolidate.ejs);
 // app.engine('vue', expressVue);
 
 // app.set('vue', {
