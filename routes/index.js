@@ -45,6 +45,10 @@ module.exports = function(app){
 
   });
 
+  app.get('/teste', function(req, res){
+    res.render('teste');
+  });
+
   app.get('/clear', function(req, res){
     global.dados = [];
     res.send('Data cleared')

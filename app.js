@@ -8,7 +8,7 @@ var bodyParser = require('body-parser');
 var load = require('express-load');
 var session = require('express-session');
 var consolidate = require('consolidate');     // Permite utilizar mais de um Template Engine
-var expressVue = require('express-vue');
+// var expressVue = require('express-vue');
 
 var app = express();
 
@@ -24,12 +24,12 @@ var app = express();
 
 app.engine('jade', consolidate.jade);
 app.engine('html', consolidate.ejs);
-app.engine('vue', expressVue);
+// app.engine('vue', expressVue);
 
-app.set('vue', {
+// app.set('vue', {
     // componentsDir: path.join(__dirname, '/views/components'),
     // defaultLayout: 'layout'
-});
+// });
 
 app.set('view engine', 'jade');
 
