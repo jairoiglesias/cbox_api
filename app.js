@@ -16,23 +16,6 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
-// Define Template Engine
-
-/*
-  app.engine(ext, callback)
-*/
-
-// app.engine('jade', consolidate.jade);
-// app.engine('html', consolidate.ejs);
-// app.engine('vue', expressVue);
-
-// app.set('vue', {
-    // componentsDir: path.join(__dirname, '/views/components'),
-    // defaultLayout: 'layout'
-// });
-
-app.set('view engine', 'jade');
-
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 
@@ -50,7 +33,7 @@ app.use(function(req, res, next) {
 
 
 // Configura Session
-app.use(session({ resave: true, saveUninitialized: true, secret: 'uwotm8' }));
+// app.use(session({ resave: true, saveUninitialized: true, secret: 'uwotm8' }));
 
 // Auto-Load de recursos (Parecido com a ideia do Auto-Load do PHP)
 load('ajax').then('routes').then('templates').then('libs').into(app);
