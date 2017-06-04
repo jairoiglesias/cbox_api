@@ -1,0 +1,131 @@
+extends .\partials\layout
+
+block content
+  
+  script(type="text/javascript").
+    $(document).ready(function(){
+      
+      function exportTableToCSV($table, filename) {
+
+        var $rows = $table.find('tr:has(td)'),
+
+            // Temporary delimiter characters unlikely to be typed by keyboard
+            // This is to avoid accidentally splitting the actual contents
+            tmpColDelim = String.fromCharCode(11), // vertical tab character
+            tmpRowDelim = String.fromCharCode(0), // null character
+
+            // actual delimiter characters for CSV format
+            colDelim = '","',
+            rowDelim = '"\r\n"',
+
+            // Grab text from table into CSV formatted string
+            csv = '"' + $rows.map(function (i, row) {
+                var $row = $(row),
+                    $cols = $row.find('td');
+
+                return $cols.map(function (j, col) {
+                    var $col = $(col),
+                        text = $col.text();
+
+                    return text.replace(/"/g, '""'); // escape double quotes
+
+                }).get().join(tmpColDelim);
+
+            }).get().join(tmpRowDelim)
+                .split(tmpRowDelim).join(rowDelim)
+                .split(tmpColDelim).join(colDelim) + '"';
+
+        // Deliberate 'false', see comment below
+        if (false && window.navigator.msSaveBlob) {
+
+            var blob = new Blob([decodeURIComponent(csv)], {
+                type: 'text/csv;charset=utf8'
+            });
+            
+            // Crashes in IE 10, IE 11 and Microsoft Edge
+            // See MS Edge Issue #10396033: https://goo.gl/AEiSjJ
+            // Hence, the deliberate 'false'
+            // This is here just for completeness
+            // Remove the 'false' at your own risk
+            window.navigator.msSaveBlob(blob, filename);
+            
+        } else if (window.Blob && window.URL) {
+            // HTML5 Blob        
+            var blob = new Blob([csv], { type: 'text/csv;charset=utf8' });
+            var csvUrl = URL.createObjectURL(blob);
+
+            $(this)
+                .attr({
+                    'download': filename,
+                    'href': csvUrl
+                });
+        } else {
+            // Data URI
+            var csvData = 'data:application/csv;charset=utf-8,' + encodeURIComponent(csv);
+
+            $(this)
+                .attr({
+                    'download': filename,
+                    'href': csvData,
+                    'target': '_blank'
+                });
+        }
+    }
+    
+      
+      
+      var promise = $.ajax({
+        url: 'json'
+      });
+      
+      promise.then(function(registros){
+        
+        var contentTable
+        
+        var headerFill = false;
+        
+        registros.forEach(function(registro){
+          
+          if (!headerFill) {
+            contentTable = '<tbody><thead><tr>'
+            
+            for(var i = 0; i < +Object.keys(registro).length; i++){
+              contentTable += '<th>'+Object.keys(registro)[i].toUpperCase()+'</th>'
+            }
+            
+            contentTable += '</tr></thead>'
+            
+            headerFill = true;
+          } 
+          
+          contentTable += '<tr>'
+          
+          for(var index in registro){
+            contentTable += '<td>'+registro[index]+'</td>'
+          }
+          
+          contentTable += '</tbody></tr>'
+          
+          
+        });
+        
+        $('#lista_prestacoes').append(contentTable);
+      });
+      
+      $('#btn_exportar_csv').click(function(){
+        
+        //- var table = $('#lista_prestacoes')
+        //- exportTableToCSV(table, 'teste.csv');
+
+    		$("#lista_prestacoes").table2csv();
+        
+      })
+      
+    });
+
+  div(id='app' class="container-flui")
+    
+    div(style="border:1px solid;box-shadow:1px 1px 1px;border-radius:3px;background:rgba(74, 91, 185, 0.11);")
+      h5 Prestações de Contas
+    input(type="button" value="Exportar CSV" id="btn_exportar_csv" style="float:right;margin-top:5px" class="btn")
+    table(id="lista_prestacoes" class="table-striped table-hover")

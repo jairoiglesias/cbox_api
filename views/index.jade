@@ -1,5 +1,41 @@
 extends .\partials\layout
 
 block content
+
+  script().
+      
+    setTimeout(function(){
+      
+      var app = new Vue({
+        el: '#app',
+        data: {
+          title: 'teste'
+        },
+        ready: function(){
+          console.log('VueJS inicializado com sucesso')
+        }
+      })
+    }, 0)
+    
+    Vue.component('my-component', {
+      data: function(){
+        return {
+          nome: ''
+        }
+      },
+      props: ['text'],
+      template: '<div><h1>{{text}}</h1></div>'
+    })
   
-  h1 Hacka Castelo
+  h1 === Licita Fácil ===
+  
+  div(id="app")
+    form
+      input(v-model="title")
+      <my-component text="jairo"></my-component>
+      <my-component text="jairo2"></my-component>
+      <my-component text="jairo3"></my-component>
+      <my-component></my-component>
+      <my-component></my-component>
+      <my-component></my-component>
+    span {{title}}
