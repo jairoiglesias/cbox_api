@@ -7,7 +7,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var load = require('express-load');
 var session = require('express-session');
-var consolidate = require('consolidate');     // Permite utilizar mais de um Template Engine
+// var consolidate = require('consolidate');     // Permite utilizar mais de um Template Engine
 // var expressVue = require('express-vue');
 
 var app = express();
@@ -22,7 +22,7 @@ app.set('view engine', 'jade');
   app.engine(ext, callback)
 */
 
-app.engine('jade', consolidate.jade);
+// app.engine('jade', consolidate.jade);
 // app.engine('html', consolidate.ejs);
 // app.engine('vue', expressVue);
 
