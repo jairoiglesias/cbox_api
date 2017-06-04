@@ -27,13 +27,13 @@ module.exports = function(){
 	// 	port: port
 	// });
 
-	var connection = mysql.createConnection({
-	  host     : 'localhost',
-	  user     : 'root',
-	  password : '',
-		database : 'licitafacil',
-		port: port
-	});
+	// var connection = mysql.createConnection({
+	//   host     : 'localhost',
+	//   user     : 'root',
+	//   password : '',
+	// 	database : 'licitafacil',
+	// 	port: port
+	// });
 
 	// connection.connect(function(err) {
 	// 	if (err) {
@@ -45,5 +45,5 @@ module.exports = function(){
 	//
 	// });
 
-	return connection
+	// return connection
 }
